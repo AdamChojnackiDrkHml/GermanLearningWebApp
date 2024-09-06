@@ -20,6 +20,7 @@ public class AllWords : BasePageModel
 
     private IWordService _wordService;
         
+    [BindProperty]
     public IEnumerable<WordDto> Words { get; set; }
 
     [BindProperty]
@@ -28,12 +29,13 @@ public class AllWords : BasePageModel
     [BindProperty]
     public GenderEnum? SelectedGender { get; set; }
     
-    public async Task OnGet()
+    public async Task<ActionResult> OnGet()
     {
         Words = await _wordService.GetAllWords();
+        return Page();
     }
     
-    public async Task OnPostWordType()
+    public async Task<ActionResult> OnPostWordType()
     {
         if (SelectedWordTypes == null)
         {
@@ -44,23 +46,19 @@ public class AllWords : BasePageModel
 
         if (SelectedGender == null)
         {
-            return;
+            return Page();
         }
+        Console.WriteLine(string.Join(", ", Words));
+        Console.WriteLine(SelectedGender);
+        Console.WriteLine(Words.First().Gender.Equals(SelectedGender));
         
         Words = Words
-            .Where(x => x.Type == WordEnum.Noun && x.Gender! == SelectedGender);
+            .Where(x => x.Type == WordEnum.Noun && x.Gender.Equals(SelectedGender));
         
-        SelectedGender = null;
-    }
+        Console.WriteLine(string.Join(", ", Words));
 
-    public async Task OnPost()
-    {
-        // Console.WriteLine(SelectedCategories);
-        // if (SelectedCategories.Count == 0)
-        // {
-        //     Words = await _wordService.GetWordsAsync();
-        // }
-        //
-        // Words = await _wordService.GetWordsAsync(SelectedCategories);
+        var page = Page();
+        return page;
     }
+    
 }

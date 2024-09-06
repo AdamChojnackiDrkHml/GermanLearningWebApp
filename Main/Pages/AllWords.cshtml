@@ -26,9 +26,15 @@
             width: 20ch;             /* Set the width of the dropdowns */
         }
     </style>
+
 </head>
 
 <body>
+@{
+var visibility = Model.SelectedWordTypes is not null && Model.SelectedWordTypes.Equals(WordEnum.Noun)
+? "block"
+: "none";
+}
 <form method="post" asp-page-handler="WordType">
     <div class="flex-container">
         <div class="form-group" id="WordTypeDiv">
@@ -38,21 +44,23 @@
                 asp-items="@(Html.GetEnumSelectList<WordEnum>())"
                 class="form-control"
                 id="WordType">
+                <option selected disabled hidden>--- Select ---</option>
             </select>
         </div>
 
-        <div class="form-group" id="GenderTypeDiv">
+        <div class="form-group" id="GenderTypeDiv" style="display: @visibility">
             <label for="GenderType">Gender</label>
             <select
                 asp-for="SelectedGender"
                 asp-items="@(Html.GetEnumSelectList<GenderEnum>())"
                 class="form-control"
                 id="GenderType">
+                <option selected disabled hidden>--- Select ---</option>
             </select>
         </div>
 
         <button type="submit" class="btn btn-primary">Filter</button>
-        
+
     </div>
 
 </form>
@@ -64,21 +72,21 @@
         <thead class="table-dark">
         <tr>
             <th scope="col">Id</th>
+            <th scope="col">Gender</th>
             <th scope="col">Spelling</th>
             <th scope="col">Translation</th>
             <th scope="col">Type</th>
-            <th scope="col">Gender</th>
         </tr>
         </thead>
         <tbody>
         @foreach (var word in Model.Words)
         {
             <tr>
-                <td>@word.Id</td>
+                <td style="width: 3ch">@word.Id</td>
+                <td style="width: 5ch">@(word.Gender is null ? string.Empty : word.Gender.Value.ToArticle())</td>
                 <td>@word.Spelling</td>
                 <td>@word.Translation</td>
                 <td>@word.Type</td>
-                <td>@(word.Gender is null ? "N/A" : word.Gender.ToString())</td>
             </tr>
         }
         </tbody>
@@ -92,6 +100,7 @@
         var genderType = selection.options[selection.selectedIndex].text.toLowerCase();
 
         document.getElementById('GenderTypeDiv').style.display = genderType === 'noun' ? 'block' : 'none';
+        document.getElementById('GenderType').selectedIndex = 0;
     }
     document.getElementById('WordType').addEventListener('change', hide_show);
 
