@@ -1,0 +1,99 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Razor.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestWebApp.Services.WordsService
+@model TestWebApp.Pages.AllWords
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "All Words";
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>All Words</title>
+    <style>
+        /* Ensure the two divs are next to each other */
+        .flex-container {
+            display: flex;           /* Enable flexbox */
+            gap: 20px;               /* Add space between the two divs */
+            align-items: center;
+        }
+
+        .form-group {
+            width: 20ch;             /* Set the width of the dropdowns */
+        }
+    </style>
+</head>
+
+<body>
+<form method="post" asp-page-handler="WordType">
+    <div class="flex-container">
+        <div class="form-group" id="WordTypeDiv">
+            <label for="WordType">Word Type</label>
+            <select
+                asp-for="SelectedWordTypes"
+                asp-items="@(Html.GetEnumSelectList<WordEnum>())"
+                class="form-control"
+                id="WordType">
+            </select>
+        </div>
+
+        <div class="form-group" id="GenderTypeDiv">
+            <label for="GenderType">Gender</label>
+            <select
+                asp-for="SelectedGender"
+                asp-items="@(Html.GetEnumSelectList<GenderEnum>())"
+                class="form-control"
+                id="GenderType">
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Filter</button>
+        
+    </div>
+
+</form>
+
+<div>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Spelling</th>
+            <th scope="col">Translation</th>
+            <th scope="col">Type</th>
+            <th scope="col">Gender</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var word in Model.Words)
+        {
+            <tr>
+                <td>@word.Id</td>
+                <td>@word.Spelling</td>
+                <td>@word.Translation</td>
+                <td>@word.Type</td>
+                <td>@(word.Gender is null ? "N/A" : word.Gender.ToString())</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+</div>
+</body>
+<script type="text/javascript">
+    function hide_show() {
+        var selection = document.getElementById('WordType');
+        var genderType = selection.options[selection.selectedIndex].text.toLowerCase();
+
+        document.getElementById('GenderTypeDiv').style.display = genderType === 'noun' ? 'block' : 'none';
+    }
+    document.getElementById('WordType').addEventListener('change', hide_show);
+
+</script>
+</html>

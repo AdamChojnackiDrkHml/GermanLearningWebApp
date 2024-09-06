@@ -1,0 +1,26 @@
+@page
+@model TestWebApp.Pages.Index
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div>
+    <h2>Gender</h2>
+    <ul>
+        @foreach (var item in Model.Genders)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>
+</body>
+</html>

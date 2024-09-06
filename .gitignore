@@ -1,0 +1,6 @@
+/Main/bin/
+/Main/obj/
+/Test/TestWebApp.Test/bin/
+/Test/TestWebApp.Test/obj/
+.idea
+Database

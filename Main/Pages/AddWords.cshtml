@@ -1,0 +1,68 @@
+@page
+@using Microsoft.AspNetCore.Mvc.Razor.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TestWebApp.Services.WordsService
+@model TestWebApp.Pages.AddWords
+
+@{
+    Layout = "Shared/_Layout";
+    ViewData["Title"] = "Add Words";
+}
+
+<!DOCTYPE html>
+
+@* <script type="text/javascript"> *@
+@*     function showPopupMessage(message) { *@
+@*         alert(message); *@
+@*     } *@
+@* </script> *@
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+<form method="post">
+    <div class="form-group">
+        <label for="Spelling">Spelling</label>
+        <input type="text" asp-for="Spelling" class="form-control" id="Spelling" />
+        <span asp-validation-for="Spelling" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Translation">Translation</label>
+        <input type="text" asp-for="Translation" class="form-control" id="Translation" />
+        <span asp-validation-for="Translation" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="WordType">Word Type</label>
+        <select asp-for="WordType" asp-items="@(Html.GetEnumSelectList<WordEnum>())" class="form-control" id="WordType">
+        </select>
+    </div>
+
+    <div class="form-group" id="GenderTypeDiv">
+        <label for="GenderType">Gender</label>
+        <select 
+            asp-for="Gender" 
+            asp-items="@(Html.GetEnumSelectList<GenderEnum>())" 
+            class="form-control" 
+            id="GenderType">
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+</body>
+<script type="text/javascript">
+    function hide_show() {
+        var selection = document.getElementById('WordType');
+        var genderType = selection.options[selection.selectedIndex].text.toLowerCase();
+
+        document.getElementById('GenderTypeDiv').style.display = genderType === 'noun' ? 'block' : 'none';
+    }
+    document.getElementById('WordType').addEventListener('change', hide_show);
+
+</script>
+</html>
