@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestWebApp.Data;
 
@@ -11,9 +12,11 @@ using TestWebApp.Data;
 namespace TestWebApp.Migrations
 {
     [DbContext(typeof(GermanLearningDbContext))]
-    partial class GermanLearningDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240909174927_WordGradeTrigger")]
+    partial class WordGradeTrigger
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

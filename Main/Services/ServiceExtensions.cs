@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using TestWebApp.Data.Models.Users;
 using TestWebApp.Services.LearningControllerService;
 using TestWebApp.Services.LearningService;
 using TestWebApp.Services.LearningService.Implementation;
@@ -31,6 +33,7 @@ public static class ServiceExtensions
     private static IServiceCollection AddUserService(this IServiceCollection services)
     {
         return services
+            .AddScoped<IPasswordHasher<User>, PasswordHasher<User>>()
             .AddScoped<IUserService, UserService.Implementation.UserService>();
     }
     
