@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestWebApp.Data;
+using TestWebApp.Data.Triggers;
 using TestWebApp.Services;
 
 namespace TestWebApp.Config;
@@ -21,9 +22,12 @@ public static class ConfigureServicesExtensions
     private static IServiceCollection AddDatabaseServices(this IServiceCollection services, ConfigurationManager config)
     {
         return services
-            .AddDbContext<GermanLearningDbContext>(options => 
-                options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
-
+            .AddDbContext<GermanLearningDbContext>(options => options
+                .UseSqlServer(config.GetConnectionString("DefaultConnection"))
+                .UseTriggers(triggerOptions => triggerOptions
+                    .AddTrigger<CreateGradeTrigger>()
+                )
+            );
     }
     
     
