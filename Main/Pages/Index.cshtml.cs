@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TestWebApp.Services.LearningService;
+using TestWebApp.Services.LearningControllerService;
 
 namespace TestWebApp.Pages;
 
 public class Index : PageModel
 {
-    private readonly ILearningService _learningService;
+    private readonly ILearningControllerService _learningControllerService;
 
     public List<string> Genders = [];
     
-    public Index(ILearningService learningService)
+    public Index(ILearningControllerService learningControllerService)
     {
-        _learningService = learningService;
+        _learningControllerService = learningControllerService;
     }
 
     public async Task<ActionResult> OnGet()

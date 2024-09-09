@@ -1,14 +1,17 @@
+using Azure;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestWebApp.Pages.Shared;
-using TestWebApp.Services.LearningService;
-using TestWebApp.Services.WordsService;
-using TestWebApp.Services.WordsService.Models;
+using TestWebApp.Services.LearningControllerService;
+using TestWebApp.Services.WordService;
+using TestWebApp.Services.WordService.Enums;
+using TestWebApp.Services.WordService.Models;
 
 namespace TestWebApp.Pages;
 
-public class AllWords : BasePageModel
+public class AllWords : PageModel
 {
-    public AllWords(ILearningService learningService, IWordService wordService) : base(learningService)
+    public AllWords(ILearningControllerService learningControllerService, IWordService wordService)
     {
         _wordService = wordService;
     }

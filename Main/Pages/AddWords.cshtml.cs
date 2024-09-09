@@ -1,17 +1,19 @@
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestWebApp.Pages.Shared;
-using TestWebApp.Services.LearningService;
-using TestWebApp.Services.WordsService;
-using TestWebApp.Services.WordsService.Models;
+using TestWebApp.Services.LearningControllerService;
+using TestWebApp.Services.WordService;
+using TestWebApp.Services.WordService.Enums;
+using TestWebApp.Services.WordService.Models;
 
 namespace TestWebApp.Pages;
 
-public class AddWords : BasePageModel
+public class AddWords : PageModel
 {
     private readonly IWordService _wordService;
 
-    public AddWords(ILearningService learningService, IWordService wordService) : base(learningService)
+    public AddWords(ILearningControllerService learningControllerService, IWordService wordService)
     {
         _wordService = wordService;
     }

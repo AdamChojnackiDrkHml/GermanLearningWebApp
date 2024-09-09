@@ -1,10 +1,18 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestWebApp.Pages.Shared;
-using TestWebApp.Services.LearningService;
+using TestWebApp.Services.LearningControllerService;
 
 namespace TestWebApp.Pages;
 
-public class Learn(ILearningService learningService) : BasePageModel(learningService)
+public class LearnPage : PageModel
 {
+    private readonly ILearningControllerService _learningControllerService;
+    
+    public LearnPage(ILearningControllerService learningControllerService)
+    {
+        _learningControllerService = learningControllerService;
+    }
+
     public void OnGet()
     {
         

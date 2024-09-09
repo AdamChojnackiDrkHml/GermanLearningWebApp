@@ -1,24 +1,12 @@
-using Microsoft.EntityFrameworkCore;
-using TestWebApp.Data;
-using TestWebApp.Services.LearningService;
-using TestWebApp.Services.LearningService.Implementation;
-using TestWebApp.Services.WordsService;
-using TestWebApp.Services.WordsService.Implementation;
+using TestWebApp.Config;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<GermanLearningDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddScoped<IWordService, WordService>();
-builder.Services.AddScoped<ILearningService, LearningService>();
+builder.Services.ConfigureAppServices(builder.Configuration);
 
-var app = builder.Build();
+builder.Build().ConfigAndRun();
 
-app.MapRazorPages();
-// app.MapGet("/", () => "Hello World!");
-
-app.Run();
-
+return;
 
