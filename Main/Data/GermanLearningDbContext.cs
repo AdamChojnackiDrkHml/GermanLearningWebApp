@@ -1,6 +1,4 @@
-using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using TestWebApp.Data.Models.Genders;
 using TestWebApp.Data.Models.Grades;
 using TestWebApp.Data.Models.Users;
@@ -30,7 +28,11 @@ public class GermanLearningDbContext : DbContext
       modelBuilder.Entity<Adverb>().ToTable("ADVERB");
       modelBuilder.Entity<Adjective>().ToTable("ADJECTIVE");
       modelBuilder.Entity<Misc>().ToTable("MISC");
-      
+
+      modelBuilder.Entity<User>()
+         .HasIndex(u => u.Username)
+         .IsUnique();
+
       modelBuilder.Entity<Gender>()
          .Property(g => g.GenderId);
       

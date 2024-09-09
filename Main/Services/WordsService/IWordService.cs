@@ -1,5 +1,4 @@
 using CSharpFunctionalExtensions;
-using TestWebApp.Data.Models.Words;
 using TestWebApp.Services.WordsService.Models;
 
 namespace TestWebApp.Services.WordsService;

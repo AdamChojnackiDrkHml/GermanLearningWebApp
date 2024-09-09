@@ -17,10 +17,6 @@ public class Index : PageModel
 
     public async Task<ActionResult> OnGet()
     {
-        Genders = (await _learningService
-            .GetGendersAsync())
-            .Select(g => g.Name)
-            .ToList();
 
         return Page();
     }

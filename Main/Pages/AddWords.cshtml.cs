@@ -1,6 +1,5 @@
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
-using TestWebApp.Data.Models.Genders;
 using TestWebApp.Pages.Shared;
 using TestWebApp.Services.LearningService;
 using TestWebApp.Services.WordsService;

@@ -1,14 +1,16 @@
-using TestWebApp.Data.Models.Genders;
-using TestWebApp.Data.Models.Words;
-using TestWebApp.Services.WordsService;
+using CSharpFunctionalExtensions;
+using TestWebApp.Services.LearningService.LearningCategories;
+using TestWebApp.Services.LearningService.LearningCategories.Models;
 
 namespace TestWebApp.Services.LearningService;
 
 public interface ILearningService
 {
-    public Task<IEnumerable<Word>> GetTrainingWordsAsync(WordEnum type, TrainingLevelEnum trainingLevel, int userId, int count);
+    public Task PrepareTrainingAsync(TrainingLevelEnum trainingLevel);
+
+    public Result<GradeDto> GetNextWord();
     
-    public Task SaveTrainingResultAsync(IEnumerable<Word> words);
+    public Task SaveTrainingResultAsync();
     
-    public Task<IEnumerable<Gender>> GetGendersAsync();
+    public Result SetLearningCategory(LearningCategoryEnum learningCategoryEnum);
 }

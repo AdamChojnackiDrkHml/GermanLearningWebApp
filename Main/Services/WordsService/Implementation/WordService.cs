@@ -1,7 +1,6 @@
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using TestWebApp.Data;
-using TestWebApp.Data.Models.Words;
 using TestWebApp.Services.WordsService.Mappers;
 using TestWebApp.Services.WordsService.Models;
 

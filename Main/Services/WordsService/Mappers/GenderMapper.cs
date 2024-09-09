@@ -1,6 +1,5 @@
 using TestWebApp.Data;
 using TestWebApp.Data.Models.Genders;
-using TestWebApp.Services.WordsService.Implementation;
 
 namespace TestWebApp.Services.WordsService.Mappers;
 

@@ -1,67 +1,51 @@
-using Microsoft.EntityFrameworkCore;
-using TestWebApp.Data;
-using TestWebApp.Data.Models.Genders;
-using TestWebApp.Data.Models.Words;
-using TestWebApp.Services.WordsService;
+using CSharpFunctionalExtensions;
+using TestWebApp.Services.LearningService.LearningCategories;
+using TestWebApp.Services.LearningService.LearningCategories.CategoryFactory;
+using TestWebApp.Services.LearningService.LearningCategories.Models;
 
 namespace TestWebApp.Services.LearningService.Implementation;
 
+#nullable disable
+
 public class LearningService : ILearningService
 {
-    private readonly GermanLearningDbContext _context;
-    private readonly IWordService _wordService;
+    private readonly ILearningCategoryFactory _learningCategoryFactory;
 
-    public LearningService(GermanLearningDbContext context, IWordService wordService)
-    {
-        _context = context;
-        _wordService = wordService;
-    }
+    private LearningCategory _learningCategory;
 
-    public async Task<IEnumerable<Word>> GetTrainingWordsAsync(
-        WordEnum type, 
-        TrainingLevelEnum trainingLevel,
-        int userId,
-        int count
+    public LearningService(
+        ILearningCategoryFactory learningCategoryFactory
     )
     {
-        var userGrades = _context.Grades
-            .Where(grade => grade.UserId == userId)
-            .OrderBy(grade => grade.Value);
-        
-        var leveledGrades = trainingLevel switch
-        {
-            TrainingLevelEnum.Easy => userGrades.Take(count),
-            TrainingLevelEnum.Hard => userGrades.Skip(userGrades.Count() - count),
-            _ => throw new ArgumentOutOfRangeException(nameof(trainingLevel), trainingLevel, null)
-        };
-
-        
-        return await leveledGrades
-            .Select(grade => grade.Word)
-            .OfType(type)
-            .ToListAsync();
+        _learningCategoryFactory = learningCategoryFactory;
+        SetLearningCategory(LearningCategoryEnum.Default);
     }
-
-    public async Task SaveTrainingResultAsync(IEnumerable<Word> words)
+    
+    public Result SetLearningCategory(LearningCategoryEnum learningCategoryEnum)
     {
-        var baseType = typeof(Word);
-        var wordsList = words.ToList();
-
-        var derivedTypes = baseType.Assembly.GetTypes()
-            .Where(t => t.IsSubclassOf(baseType) && !t.IsAbstract);
-
-        foreach (var type in derivedTypes)
+        var learningCategoryResult = _learningCategoryFactory.CreateLearningCategory(learningCategoryEnum);
+        
+        if (learningCategoryResult.IsFailure)
         {
-            var method = _wordService.GetType().GetMethod("UpdateWordsAsync")!.MakeGenericMethod(type);
-
-            var filteredList = wordsList.Where(item => item.GetType() == type);
-
-            await (Task)method.Invoke(this, [filteredList])!;
+            return learningCategoryResult;
         }
-    }
 
-    public async Task<IEnumerable<Gender>> GetGendersAsync()
+        _learningCategory = learningCategoryResult.Value;
+        return Result.Success();
+    }
+    
+    public async Task PrepareTrainingAsync(TrainingLevelEnum trainingLevel)
     {
-        return await _context.Genders.ToListAsync();
+        await _learningCategory.PrepareTrainingAsync(trainingLevel);
+    }
+    
+    public Result<GradeDto> GetNextWord()
+    {
+        return _learningCategory.GetNextWord();
+    }
+    
+    public async Task SaveTrainingResultAsync()
+    {
+        await _learningCategory.SaveTrainingResultAsync();
     }
 }
