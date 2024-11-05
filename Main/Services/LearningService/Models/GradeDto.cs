@@ -5,6 +5,5 @@ namespace TestWebApp.Services.LearningService.Models;
 public record GradeDto(
     WordDto Word,
     int UserId,
-    int Grade,
-    bool IsCorrect
+    int Grade
 );

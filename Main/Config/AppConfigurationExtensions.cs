@@ -7,6 +7,11 @@ public static class AppConfigurationExtensions
         app.UseSession();
         app.UseRouting();
         app.MapRazorPages();
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            app.UseHsts();
+        }
 
         return app;
     }

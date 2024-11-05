@@ -9,6 +9,8 @@ public interface ILearningService
     Task PrepareTrainingAsync(TrainingLevelEnum trainingLevel);
 
     Result<GradeDto> GetNextWord();
+    
+    GradeResultDto CheckAnswer(GradeDto gradeDto, string answer);
 
     Task SaveTrainingResultAsync();
 }

@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using TestWebApp.Data;
 using TestWebApp.Services.LearningService.Enums;
+using TestWebApp.Services.LearningService.Models;
 using TestWebApp.Services.UserService;
 using TestWebApp.Services.WordService;
+using TestWebApp.Services.WordService.Extensions;
 using static TestWebApp.Services.LearningService.Mappers.GradeMapper;
 
 namespace TestWebApp.Services.LearningService.Implementation;
@@ -33,15 +35,37 @@ public class DefaultLearningService : LearningService
         };
 
         
-        GradedWords = await leveledGrades
+        WordsToGrade = await leveledGrades
             .Select(grade => grade.ToDto())
             .ToListAsync();
     }
 
     public override async Task SaveTrainingResultAsync()
     {
-        GradedWords.ToList().ForEach(grade => Context.Grades.Update(grade.ToEntity(Context)));
+        Answers.ToList().ForEach(grade => Context.Grades.Update(grade.ToEntity(Context)));
         
         await Context.SaveChangesAsync();
+    }
+    
+    public override GradeResultDto CheckAnswer(GradeDto gradeDto, string answer)
+    {
+        var genderArticle = gradeDto.Word.Gender.GetGenderString();
+        var expectedAnswer = string.IsNullOrEmpty(genderArticle) 
+            ? gradeDto.Word.Spelling
+            : $"{genderArticle} {gradeDto.Word.Spelling}";
+
+        var result = expectedAnswer.Equals(answer);
+        
+        var grade = gradeDto with
+        {
+            Grade = gradeDto.Grade + (result ? 1 : 0)
+        };
+        
+        Answers.Add(grade);
+        
+        return new GradeResultDto(
+            result,
+            expectedAnswer
+        );
     }
 }

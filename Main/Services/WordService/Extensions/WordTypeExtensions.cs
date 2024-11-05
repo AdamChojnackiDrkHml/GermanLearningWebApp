@@ -17,5 +17,21 @@ public static class WordTypeExtensions
             _ => words,
         };
     }
+
+    public static string GetGenderString(this GenderEnum? genderEnum)
+    {
+        if (genderEnum == null)
+        {
+            return string.Empty;
+        }
+        
+        return genderEnum switch
+        {
+            GenderEnum.Masculine => "der",
+            GenderEnum.Feminine => "die",
+            GenderEnum.Neutral => "das",
+            _ => string.Empty
+        };
+    }
     
 }

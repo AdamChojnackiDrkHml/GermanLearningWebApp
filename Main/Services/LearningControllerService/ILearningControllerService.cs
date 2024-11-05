@@ -1,4 +1,5 @@
 using CSharpFunctionalExtensions;
+using TestWebApp.Services.LearningControllerService.Models;
 using TestWebApp.Services.LearningService.Enums;
 using TestWebApp.Services.LearningService.Models;
 
@@ -8,7 +9,9 @@ public interface ILearningControllerService
 {
     public Task PrepareTrainingAsync(TrainingLevelEnum trainingLevel);
 
-    public Result<GradeDto> GetNextWord();
+    public Result<ExerciseDto> GetNextWord();
+    
+    public ExerciseResultDto CheckAnswerAsync(ExerciseAnswerDto answer);
     
     public Task SaveTrainingResultAsync();
     

@@ -21,9 +21,23 @@ public static class ConfigureServicesExtensions
     
     private static IServiceCollection AddDatabaseServices(this IServiceCollection services, ConfigurationManager config)
     {
+        var connectionSettings = config.GetSection("ConnectionSettings");
+        var connectionString = $"""
+                                    Server={connectionSettings["Server"]};
+                                    Database={connectionSettings["Database"]};
+                                    User Id={connectionSettings["User Id"]};
+                                    Password={connectionSettings["Password"]};
+                                    TrustServerCertificate={connectionSettings["TrustServerCertificate"]};
+                                    MultipleActiveResultSets={connectionSettings["MultipleActiveResultSets"]};
+                                    Connection Timeout={connectionSettings["Connection Timeout"]};                                    
+                               """;
+        var commandTimeout = connectionSettings.GetValue<int>("Command Timeout");
+        
         return services
             .AddDbContext<GermanLearningDbContext>(options => options
-                .UseSqlServer(config.GetConnectionString("DefaultConnection"))
+                .UseSqlServer(connectionString, sqlOptions => {
+                    sqlOptions.CommandTimeout(commandTimeout);
+                })
                 .UseTriggers(triggerOptions => triggerOptions
                     .AddTrigger<CreateGradeTrigger>()
                 )

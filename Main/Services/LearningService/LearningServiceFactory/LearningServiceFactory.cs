@@ -6,20 +6,23 @@ namespace TestWebApp.Services.LearningService.LearningServiceFactory;
 
 public class LearningServiceFactory : ILearningServiceFactory
 {
-    private readonly Dictionary<LearningCategoryEnum, Implementation.LearningService> _categories;
+    private readonly Dictionary<LearningCategoryEnum, ILearningService> _categories;
 
     public LearningServiceFactory(
         IServiceProvider serviceProvider
     )
     {
-        _categories = new Dictionary<LearningCategoryEnum, Implementation.LearningService>
+        _categories = new Dictionary<LearningCategoryEnum, ILearningService>
         {
             {LearningCategoryEnum.Default, serviceProvider.GetRequiredService<DefaultLearningService>()}
         };
     }
 
-    public Result<Implementation.LearningService> CreateLearningCategory(LearningCategoryEnum learningCategoryEnum)
+    public Result<ILearningService> CreateLearningCategory(LearningCategoryEnum learningCategoryEnum)
     {
-        return _categories[learningCategoryEnum];
+        return !_categories.TryGetValue(learningCategoryEnum, out var category) 
+            ? Result.Failure<ILearningService>($"Learning category {learningCategoryEnum} is not supported") 
+            : Result.Success(category);
+
     }
 }

@@ -15,6 +15,7 @@ public static class ServiceExtensions
     {
         return services
             .AddScoped<ILearningService, DefaultLearningService>()
+            .AddScoped<DefaultLearningService>()
             .AddScoped<ILearningServiceFactory, LearningServiceFactory>();
     }
     
@@ -37,9 +38,16 @@ public static class ServiceExtensions
             .AddScoped<IUserService, UserService.Implementation.UserService>();
     }
     
+    public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
+    {
+        return services
+            .AddExceptionHandler<ExceptionHandler.ExceptionHandler>();
+    }
+    
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         return services
+            .AddExceptionHandling()
             .AddLearningService()
             .AddLearningControllerService()
             .AddWordService()

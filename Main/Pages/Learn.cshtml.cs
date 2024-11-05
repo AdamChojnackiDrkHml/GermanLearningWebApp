@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestWebApp.Pages.Shared;
 using TestWebApp.Services.LearningControllerService;
@@ -13,8 +14,8 @@ public class LearnPage : PageModel
         _learningControllerService = learningControllerService;
     }
 
-    public void OnGet()
+    public async Task<ActionResult> OnGet()
     {
-        
+        return Page();
     }
 }

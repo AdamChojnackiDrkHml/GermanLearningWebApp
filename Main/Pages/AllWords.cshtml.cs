@@ -46,17 +46,13 @@ public class AllWords : PageModel
         {
             return Page();
         }
-        Console.WriteLine(string.Join(", ", Words));
-        Console.WriteLine(SelectedGender);
-        Console.WriteLine(Words.First().Gender.Equals(SelectedGender));
         
         Words = Words
             .Where(x => x.Type == WordEnum.Noun && x.Gender.Equals(SelectedGender));
         
         Console.WriteLine(string.Join(", ", Words));
 
-        var page = Page();
-        return page;
+        return Page();
     }
     
 }
