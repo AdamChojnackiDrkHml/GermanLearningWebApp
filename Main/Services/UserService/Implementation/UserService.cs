@@ -91,7 +91,7 @@ public class UserService : IUserService
         _httpContextAccessor.HttpContext!.Session.SetObject("User", user);
     }
 
-    public Result<UserDto> GetSessionUserAsync()
+    public Result<UserDto> GetSessionUser()
     {
         return _httpContextAccessor.HttpContext is null
             ? Result.Failure<UserDto>("No HTTP context available")

@@ -1,6 +1,8 @@
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using TestWebApp.Data;
+using TestWebApp.Data.Models.Grades;
+using TestWebApp.Services.UserService;
 using TestWebApp.Services.WordService.Enums;
 using TestWebApp.Services.WordService.Extensions;
 using TestWebApp.Services.WordService.Mappers;
@@ -8,8 +10,10 @@ using TestWebApp.Services.WordService.Models;
 
 namespace TestWebApp.Services.WordService.Implementation;
 
-public class WordService(GermanLearningDbContext context) : IWordService
+public class WordService(GermanLearningDbContext context, IUserService userService) : IWordService
 {
+    private IUserService UserService { get; } = userService;
+
     public async Task<IEnumerable<WordDto>> GetWordsAsync(WordEnum type)
     {
         var x =  await context
@@ -102,6 +106,23 @@ public class WordService(GermanLearningDbContext context) : IWordService
         {
             return Result.Failure(e.Message);
         }
+    }
+    
+    private async Task CreateGradesAsync(IEnumerable<WordDto> words)
+    {
+        var user = UserService.GetSessionUser();
+
+        var userEntity = user.Value.ToEntity(); 
+        
+        var grades = words.Select(word => new Grade
+        {
+            UserId = userEntity.Value.Id,
+            WordId = (int)word.Id!,
+            Value = 0
+        });
+
+        await context.Grades.AddRangeAsync(grades);
+        await context.SaveChangesAsync();
     }
     
 }

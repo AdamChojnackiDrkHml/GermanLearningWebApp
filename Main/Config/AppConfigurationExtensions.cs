@@ -12,6 +12,7 @@ public static class AppConfigurationExtensions
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
+        app.UseAuthentication();
 
         return app;
     }

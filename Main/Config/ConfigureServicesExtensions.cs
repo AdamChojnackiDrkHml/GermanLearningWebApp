@@ -10,6 +10,7 @@ public static class ConfigureServicesExtensions
     private static IServiceCollection AddSessionServices(this IServiceCollection services)
     {
         return services
+            .AddDistributedMemoryCache()
             .AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -45,16 +46,16 @@ public static class ConfigureServicesExtensions
     }
     
     
-    private static IServiceCollection AddCustomServices(this IServiceCollection services)
+    private static IServiceCollection AddCustomServices(this IServiceCollection services, IWebHostEnvironment env)
     {
-        return services.AddServices();
+        return services.AddServices(env);
     }
     
-    public static IServiceCollection ConfigureAppServices(this IServiceCollection services, ConfigurationManager config)
+    public static IServiceCollection ConfigureAppServices(this IServiceCollection services, ConfigurationManager config, IWebHostEnvironment env)
     {
         return services
             .AddDatabaseServices(config)
             .AddSessionServices()
-            .AddCustomServices();
+            .AddCustomServices(env);
     }
 }

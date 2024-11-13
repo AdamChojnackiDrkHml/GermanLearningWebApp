@@ -51,7 +51,7 @@ public class AddWords : PageModel
             return Page();
         }
         var word = new WordDto( Id: null, Spelling, Translation, WordType, Gender);
-
+ 
         var message = 
             (await _wordService.AddWordAsync(word)).Match(
                 onSuccess: () => "Word added successfully",
@@ -59,7 +59,7 @@ public class AddWords : PageModel
             );
 
         TempData["PopupMessage"] = message;
-
+        Console.WriteLine(message);
         return Page();
     }
 }

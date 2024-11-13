@@ -13,8 +13,27 @@
     <title>Learinig Service</title>
 </head>
 <body>
-<div>
-    dupa3
-</div>
+
+<form method="post">
+    @if(!Model.SelectedDifficulty.HasValue)
+    {
+        <h2>Select Difficulty</h2>
+        <a asp-page="./Learn" asp-route-trainingLevelEnum="Easy">Easy</a>
+        <a asp-page="./Learn" asp-route-trainingLevelEnum="Hard">Hard</a>
+    }
+    else
+    {
+        <div>
+            <p>@Model.Exercise.QuestionWord</p>
+
+            <label for="Answer">Provide additional input:</label>
+            <input type="text" id="Answer" name="answer"/>
+
+            <button type="submit">Submit</button>
+        </div>
+    }
+
+</form>
+
 </body>
 </html>

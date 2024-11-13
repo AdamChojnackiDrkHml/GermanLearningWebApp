@@ -31,11 +31,23 @@ public static class ServiceExtensions
             .AddScoped<IWordService, WordService.Implementation.WordService>();
     }
     
-    private static IServiceCollection AddUserService(this IServiceCollection services)
+    private static IServiceCollection AddUserService(this IServiceCollection services, IWebHostEnvironment env)
     {
-        return services
-            .AddScoped<IPasswordHasher<User>, PasswordHasher<User>>()
-            .AddScoped<IUserService, UserService.Implementation.UserService>();
+        services = services
+            .AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+        
+        if (env.IsDevelopment())
+        {
+            services = services
+                .AddScoped<IUserService, UserService.Implementation.DevelopmentUserService>();
+        }
+        else
+        {
+            services = services
+                .AddScoped<IUserService, UserService.Implementation.UserService>();
+        }
+
+        return services;
     }
     
     public static IServiceCollection AddExceptionHandling(this IServiceCollection services)
@@ -44,14 +56,14 @@ public static class ServiceExtensions
             .AddExceptionHandler<ExceptionHandler.ExceptionHandler>();
     }
     
-    public static IServiceCollection AddServices(this IServiceCollection services)
+    public static IServiceCollection AddServices(this IServiceCollection services, IWebHostEnvironment env)
     {
         return services
             .AddExceptionHandling()
             .AddLearningService()
             .AddLearningControllerService()
             .AddWordService()
-            .AddUserService();
+            .AddUserService(env);
     }
 
 }

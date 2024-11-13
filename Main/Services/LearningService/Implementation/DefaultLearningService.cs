@@ -21,11 +21,18 @@ public class DefaultLearningService : LearningService
 
     public override async Task PrepareTrainingAsync(TrainingLevelEnum trainingLevel)
     {
-        var user = UserService.GetSessionUserAsync();
+        var user = UserService.GetSessionUser();
         
-        var userGrades = Context.Grades
+        var userGrades = await Context.Grades
             .Where(grade => grade.UserId == user.Value.UserId)
-            .OrderBy(grade => grade.Value);
+            .OrderBy(grade => grade.Value)
+            .Include(grade => grade.Word)
+            .ToListAsync();
+        
+        foreach (var userGrade in userGrades)
+        {
+            Console.WriteLine(userGrade.Word.Spelling);
+        }
 
         var leveledGrades = trainingLevel switch
         {
@@ -34,15 +41,17 @@ public class DefaultLearningService : LearningService
             _ => throw new ArgumentOutOfRangeException(nameof(trainingLevel), trainingLevel, null)
         };
 
-        
-        WordsToGrade = await leveledGrades
+
+        WordsToGrade = leveledGrades
             .Select(grade => grade.ToDto())
-            .ToListAsync();
+            .ToList();
     }
 
     public override async Task SaveTrainingResultAsync()
     {
-        Answers.ToList().ForEach(grade => Context.Grades.Update(grade.ToEntity(Context)));
+        Answers.ToList().ForEach(grade => {
+            Context.Grades.Update(grade.ToEntity(Context));
+        });
         
         await Context.SaveChangesAsync();
     }

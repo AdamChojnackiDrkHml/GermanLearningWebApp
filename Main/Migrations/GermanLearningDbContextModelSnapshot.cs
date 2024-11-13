@@ -107,6 +107,14 @@ namespace TestWebApp.Migrations
                         .IsUnique();
 
                     b.ToTable("USER");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Password = "TestPassword",
+                            Username = "TestUser"
+                        });
                 });
 
             modelBuilder.Entity("TestWebApp.Data.Models.Words.Word", b =>

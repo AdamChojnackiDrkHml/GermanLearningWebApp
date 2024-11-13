@@ -11,5 +11,5 @@ public interface IUserService
     
     public Task<Result> LogInAndSetSessionUser(UserDto userDto);
     
-    public Result<UserDto> GetSessionUserAsync();
+    public Result<UserDto> GetSessionUser();
 }
